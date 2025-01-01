@@ -1,6 +1,5 @@
 package com.enes.ecommerce.customer;
 
-import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 import com.enes.ecommerce.exception.CustomerNotFoundException;
@@ -11,20 +10,24 @@ import java.util.stream.Collectors;
 import static java.lang.String.format;
 
 @Service
-@RequiredArgsConstructor
 public class CustomerService {
     private final CustomerRepository repository;
     private final CustomerMapper mapper;
 
+    public CustomerService(CustomerRepository repository, CustomerMapper mapper) {
+        this.repository = repository;
+        this.mapper = mapper;
+    }
+
     public String createCustomer(CustomerRequest request) {
-        var customer = repository.save(mapper.toCustomer(request));
+        var customer = this.repository.save(mapper.toCustomer(request));
         return customer.getId();
     }
 
     public void updateCustomer(CustomerRequest request) {
-        var customer = repository.findById(request.id())
+        var customer = this.repository.findById(request.id())
                 .orElseThrow(() -> new CustomerNotFoundException(
-                        format("Can not update customer:: No customer found with the provided ID:: ½s", request.id())
+                        String.format("Cannot update customer:: No customer found with the provided ID:: %s", request.id())
                 ));
         mergeCustomer(customer, request);
         repository.save(customer);

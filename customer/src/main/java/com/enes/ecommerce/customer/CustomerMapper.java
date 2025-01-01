@@ -6,13 +6,13 @@ import org.springframework.stereotype.Service;
 public class CustomerMapper {
     public Customer toCustomer(CustomerRequest request) {
         if (request == null) return null;
-        return Customer.builder()
-                .id(request.id())
-                .firstName(request.firstName())
-                .lastName(request.lastName())
-                .email(request.email())
-                .address(request.address())
-                .build();
+        return new Customer(
+                request.id(),
+                request.firstName(),
+                request.lastName(),
+                request.email(),
+                request.address()
+        );
     }
 
     public CustomerResponse fromCustomer(Customer customer) {
